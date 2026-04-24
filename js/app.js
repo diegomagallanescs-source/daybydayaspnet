@@ -33,6 +33,9 @@ function renderDayPage() {
   const modes = ['beginner', 'mid', 'advanced', 'enterprise'];
   container.innerHTML = modes.map(m => renderModeSection(m, day.modes[m])).join('');
 
+  // Wire up the interactive code editors
+  if (typeof initCodeEditors === 'function') initCodeEditors(container);
+
   // Show default (beginner)
   container.querySelector('.mode-content[data-mode="beginner"]').classList.add('active');
 
@@ -86,6 +89,7 @@ function renderDayPage() {
       const end = ta.selectionEnd;
       ta.value = ta.value.substring(0, start) + '    ' + ta.value.substring(end);
       ta.selectionStart = ta.selectionEnd = start + 4;
+      ta.dispatchEvent(new Event('input', { bubbles: true }));
     }
   });
 

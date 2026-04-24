@@ -708,29 +708,97 @@ p code, li code {
   line-height: 1.6;
 }
 .challenge__editor {
-  display: block;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  min-height: 180px;
+  height: 100%;
   margin: 0;
   padding: var(--s-4) var(--s-5);
-  background: transparent;
-  color: var(--text);
   border: 0;
-  border-left: 2px solid transparent;
   outline: none;
-  resize: vertical;
+  background: transparent;
+  color: transparent;
+  caret-color: #f2efe8;
+  resize: none;
   font-family: var(--font-mono);
   font-size: 0.85rem;
   line-height: 1.6;
+  letter-spacing: 0;
   tab-size: 4;
   -moz-tab-size: 4;
   white-space: pre;
   overflow: auto;
 }
-.challenge__editor:focus {
-  border-left-color: var(--accent);
-  background: rgba(255,255,255,0.02);
+.challenge__editor::selection {
+  background: rgba(132, 204, 22, 0.28);
 }
+
+/* Layered code editor: gutter + highlight pre + transparent textarea */
+.code-editor {
+  position: relative;
+  display: flex;
+  background: #0d1117;
+  border-top: 1px solid var(--border);
+  min-height: 220px;
+  height: 280px;
+  max-height: 600px;
+  resize: vertical;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.code-editor__gutter {
+  flex: 0 0 auto;
+  min-width: 3ch;
+  margin: 0;
+  padding: var(--s-4) 10px var(--s-4) 14px;
+  text-align: right;
+  color: #4b5563;
+  background: rgba(0, 0, 0, 0.25);
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+  white-space: pre;
+  user-select: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+.code-editor__stack {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+.code-editor__highlight {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: var(--s-4) var(--s-5);
+  overflow: hidden;
+  pointer-events: none;
+  white-space: pre;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: #86efac;
+  background: transparent;
+}
+.code-editor__highlight code {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  white-space: inherit;
+  background: transparent;
+}
+
+/* IDE-style token palette — scoped so existing code blocks keep their current look */
+.code-editor__highlight .tok-keyword { color: #60a5fa; font-weight: 500; }
+.code-editor__highlight .tok-type    { color: #22d3ee; }
+.code-editor__highlight .tok-string  { color: #fbbf24; }
+.code-editor__highlight .tok-number  { color: #f472b6; }
+.code-editor__highlight .tok-comment { color: #64748b; font-style: italic; }
+.code-editor__highlight .tok-attr    { color: #a78bfa; }
+.code-editor__highlight .tok-fn      { color: #93c5fd; }
 .challenge__controls {
   padding: var(--s-4) var(--s-5);
   border-top: 1px solid var(--border);

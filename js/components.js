@@ -91,11 +91,16 @@ function renderFlashcard(card, idx) {
 
 /* ---------- Coding challenge ---------- */
 function renderChallenge(ch, idx) {
-  // Escape for safe insertion into <textarea> content
   const escapeForTextarea = (s) =>
     s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const starterHtml = ch.starterCode
-    ? `<div class="challenge__starter"><textarea class="challenge__editor" spellcheck="false" autocomplete="off" autocapitalize="off">${escapeForTextarea(ch.starterCode)}</textarea></div>`
+    ? `<div class="challenge__starter"><div class="code-editor">
+         <pre class="code-editor__gutter" aria-hidden="true"></pre>
+         <div class="code-editor__stack">
+           <pre class="code-editor__highlight" aria-hidden="true"><code></code></pre>
+           <textarea class="challenge__editor" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" wrap="off">${escapeForTextarea(ch.starterCode)}</textarea>
+         </div>
+       </div></div>`
     : '';
   const explanationHtml = ch.explanation
     ? `<div class="challenge__explanation">${ch.explanation.split('\n\n').map(p => `<p>${p}</p>`).join('')}</div>`
@@ -166,3 +171,44 @@ function renderModeSection(mode, data) {
     </div>
   `;
 }
+
+/* ---------- Interactive code editor init ---------- */
+function initCodeEditors(root) {
+  root.querySelectorAll('.code-editor').forEach(editor => {
+    if (editor.dataset.initialized) return;
+    editor.dataset.initialized = '1';
+
+    const textarea = editor.querySelector('.challenge__editor');
+    const highlightPre = editor.querySelector('.code-editor__highlight');
+    const highlightCode = highlightPre && highlightPre.querySelector('code');
+    const gutter = editor.querySelector('.code-editor__gutter');
+    if (!textarea || !highlightCode || !gutter) return;
+
+    const updateLineNumbers = (lineCount) => {
+      let s = '';
+      for (let i = 1; i <= lineCount; i++) s += i + '\n';
+      gutter.textContent = s;
+    };
+
+    const update = () => {
+      const value = textarea.value;
+      // Trailing-newline fix: append a space so highlight pre renders the extra line.
+      const display = value.endsWith('\n') ? value + ' ' : value;
+      highlightCode.innerHTML = highlight(display);
+      updateLineNumbers(value.split('\n').length);
+    };
+
+    const syncScroll = () => {
+      highlightPre.scrollTop = textarea.scrollTop;
+      highlightPre.scrollLeft = textarea.scrollLeft;
+      gutter.scrollTop = textarea.scrollTop;
+    };
+
+    textarea.addEventListener('input', () => { update(); syncScroll(); });
+    textarea.addEventListener('scroll', syncScroll);
+
+    update();
+  });
+}
+
+window.initCodeEditors = initCodeEditors;
