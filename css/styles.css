@@ -707,6 +707,30 @@ p code, li code {
   font-size: 0.85rem;
   line-height: 1.6;
 }
+.challenge__editor {
+  display: block;
+  width: 100%;
+  min-height: 180px;
+  margin: 0;
+  padding: var(--s-4) var(--s-5);
+  background: transparent;
+  color: var(--text);
+  border: 0;
+  border-left: 2px solid transparent;
+  outline: none;
+  resize: vertical;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  tab-size: 4;
+  -moz-tab-size: 4;
+  white-space: pre;
+  overflow: auto;
+}
+.challenge__editor:focus {
+  border-left-color: var(--accent);
+  background: rgba(255,255,255,0.02);
+}
 .challenge__controls {
   padding: var(--s-4) var(--s-5);
   border-top: 1px solid var(--border);

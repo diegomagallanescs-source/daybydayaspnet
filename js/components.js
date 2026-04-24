@@ -91,8 +91,11 @@ function renderFlashcard(card, idx) {
 
 /* ---------- Coding challenge ---------- */
 function renderChallenge(ch, idx) {
+  // Escape for safe insertion into <textarea> content
+  const escapeForTextarea = (s) =>
+    s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const starterHtml = ch.starterCode
-    ? `<div class="challenge__starter"><pre><code>${highlight(ch.starterCode)}</code></pre></div>`
+    ? `<div class="challenge__starter"><textarea class="challenge__editor" spellcheck="false" autocomplete="off" autocapitalize="off">${escapeForTextarea(ch.starterCode)}</textarea></div>`
     : '';
   const explanationHtml = ch.explanation
     ? `<div class="challenge__explanation">${ch.explanation.split('\n\n').map(p => `<p>${p}</p>`).join('')}</div>`

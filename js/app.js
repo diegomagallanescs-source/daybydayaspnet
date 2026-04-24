@@ -78,6 +78,15 @@ function renderDayPage() {
         card.classList.toggle('flipped');
       }
     }
+    // Tab inside the code editor inserts 4 spaces instead of jumping focus
+    if (e.key === 'Tab' && e.target.classList.contains('challenge__editor')) {
+      e.preventDefault();
+      const ta = e.target;
+      const start = ta.selectionStart;
+      const end = ta.selectionEnd;
+      ta.value = ta.value.substring(0, start) + '    ' + ta.value.substring(end);
+      ta.selectionStart = ta.selectionEnd = start + 4;
+    }
   });
 
   // Prev / next
