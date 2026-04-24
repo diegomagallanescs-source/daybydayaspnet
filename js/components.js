@@ -113,8 +113,11 @@ function renderChallenge(ch, idx) {
       </div>
       <div class="challenge__prompt">${ch.prompt.split('\n\n').map(p => `<p>${p}</p>`).join('')}</div>
       ${starterHtml}
+      <textarea class="challenge__solution-raw" hidden aria-hidden="true">${escapeForTextarea(ch.solution)}</textarea>
       <div class="challenge__controls">
+        ${ch.starterCode ? '<button class="btn-reveal btn-check" data-action="check">Check my code</button>' : ''}
         <button class="btn-reveal" data-action="reveal">Reveal solution</button>
+        <span class="challenge__result" data-slot="result" hidden></span>
         <span class="challenge__hint">${ch.hint || 'Try it first on paper, then flip it.'}</span>
       </div>
       <div class="challenge__solution">

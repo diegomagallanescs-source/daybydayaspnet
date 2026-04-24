@@ -3,6 +3,57 @@
    interactions, challenge reveal.
    ============================================================ */
 
+/* ---------- Code comparison helpers ----------
+   stripComments walks character-by-character so we don't strip
+   `//` inside a string literal. Handles regular, interpolated,
+   and verbatim strings, plus // and /* ... *\/ comments.
+   normalizeForCompare then collapses whitespace so formatting
+   (indent style, blank lines, trailing spaces) doesn't matter.
+*/
+function stripComments(src) {
+  let out = '';
+  let i = 0;
+  const n = src.length;
+  let state = 'code'; // code | line | block | str | vstr
+  while (i < n) {
+    const c = src[i];
+    const c2 = src[i + 1];
+    if (state === 'code') {
+      if (c === '/' && c2 === '/') { state = 'line'; i += 2; continue; }
+      if (c === '/' && c2 === '*') { state = 'block'; i += 2; continue; }
+      if (c === '@' && c2 === '"') { state = 'vstr'; out += c + c2; i += 2; continue; }
+      if ((c === '$' || c === '@') && (c2 === '@' || c2 === '$') && src[i + 2] === '"') {
+        state = 'vstr'; out += c + c2 + '"'; i += 3; continue;
+      }
+      if (c === '$' && c2 === '"') { state = 'str'; out += c + c2; i += 2; continue; }
+      if (c === '"') { state = 'str'; out += c; i++; continue; }
+      out += c; i++;
+    } else if (state === 'line') {
+      if (c === '\n') { state = 'code'; out += c; i++; } else { i++; }
+    } else if (state === 'block') {
+      if (c === '*' && c2 === '/') { state = 'code'; i += 2; } else { i++; }
+    } else if (state === 'str') {
+      if (c === '\\' && c2 !== undefined) { out += c + c2; i += 2; continue; }
+      if (c === '"') { state = 'code'; out += c; i++; continue; }
+      out += c; i++;
+    } else if (state === 'vstr') {
+      if (c === '"' && c2 === '"') { out += c + c2; i += 2; continue; }
+      if (c === '"') { state = 'code'; out += c; i++; continue; }
+      out += c; i++;
+    }
+  }
+  return out;
+}
+
+function normalizeForCompare(src) {
+  return stripComments(src)
+    .replace(/\s+/g, ' ')
+    // collapse spaces around common punctuation so style differences
+    // (e.g. `a,b` vs `a, b`) don't produce a false mismatch
+    .replace(/\s*([(){}\[\];,<>=+\-*/%!&|?:])\s*/g, '$1')
+    .trim();
+}
+
 function getDayIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   return parseInt(params.get('day') || '1', 10);
@@ -68,6 +119,28 @@ function renderDayPage() {
       } else {
         sol.classList.add('revealed');
         btn.textContent = 'Hide solution';
+      }
+    }
+    if (e.target.matches('[data-action="check"]')) {
+      const challenge = e.target.closest('.challenge');
+      const editor = challenge.querySelector('.challenge__editor');
+      const rawSolution = challenge.querySelector('.challenge__solution-raw');
+      const slot = challenge.querySelector('[data-slot="result"]');
+      if (!editor || !rawSolution || !slot) return;
+
+      const userNorm = normalizeForCompare(editor.value);
+      const solNorm = normalizeForCompare(rawSolution.value);
+
+      slot.hidden = false;
+      if (userNorm === solNorm) {
+        slot.textContent = '✓ Matches the solution';
+        slot.className = 'challenge__result challenge__result--ok';
+      } else if (userNorm.length === 0) {
+        slot.textContent = 'Editor is empty — try writing something first';
+        slot.className = 'challenge__result challenge__result--warn';
+      } else {
+        slot.textContent = '✗ Differs from the solution — compare with Reveal';
+        slot.className = 'challenge__result challenge__result--diff';
       }
     }
   });

@@ -825,6 +825,36 @@ p code, li code {
   background: var(--amber);
   color: var(--ink);
 }
+.btn-check {
+  border-color: var(--mode-beginner);
+  color: var(--mode-beginner);
+}
+.btn-check:hover {
+  background: var(--mode-beginner);
+  color: var(--ink);
+}
+.challenge__result {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-sm);
+  border: 1px solid transparent;
+  letter-spacing: 0.02em;
+}
+.challenge__result--ok {
+  color: var(--mode-beginner);
+  border-color: var(--mode-beginner);
+  background: rgba(74, 222, 128, 0.08);
+}
+.challenge__result--diff {
+  color: var(--mode-advanced);
+  border-color: var(--mode-advanced);
+  background: rgba(251, 191, 36, 0.08);
+}
+.challenge__result--warn {
+  color: var(--text-mute);
+  border-color: var(--border);
+}
 .challenge__hint {
   font-family: var(--mono);
   font-size: 0.8rem;
