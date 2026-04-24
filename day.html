@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day — ASP.NET Core Study Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="index.html" class="brand">
+        <span class="brand__mark">.NET</span>
+        <span>25-Day Study Guide</span>
+      </a>
+      <span class="nav-meta" id="header-day-label">—</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="day-header">
+      <div class="container">
+        <div class="day-header__crumbs">
+          <a href="index.html">← All days</a>
+        </div>
+        <div class="day-header__number" id="day-number">Day —</div>
+        <h1 class="day-header__title" id="day-title">Loading…</h1>
+        <p class="day-header__subtitle" id="day-subtitle"></p>
+        <div class="day-header__meta">
+          <span><strong>Overview:</strong> <span id="day-overview"></span></span>
+        </div>
+        <div class="day-header__meta" id="day-csharp-row" style="display:none;">
+          <span><strong>C# sharpener:</strong> <span id="day-csharp"></span></span>
+        </div>
+        <div style="margin-top: var(--s-5);">
+          <button id="toggle-complete" class="btn-reveal">Mark as complete</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <nav class="mode-tabs" id="mode-tabs">
+        <button class="mode-tab active" data-mode="beginner">
+          <span class="mode-tab__dot"></span> Beginner
+        </button>
+        <button class="mode-tab" data-mode="mid">
+          <span class="mode-tab__dot"></span> Mid-level
+        </button>
+        <button class="mode-tab" data-mode="advanced">
+          <span class="mode-tab__dot"></span> Advanced
+        </button>
+        <button class="mode-tab" data-mode="enterprise">
+          <span class="mode-tab__dot"></span> Enterprise
+        </button>
+      </nav>
+
+      <div id="mode-container"></div>
+
+      <nav class="day-nav">
+        <a href="#" id="prev-day" style="visibility:hidden;">
+          <div class="day-nav__label">← Previous</div>
+          <div class="day-nav__title" id="prev-day-title"></div>
+        </a>
+        <a href="#" id="next-day" class="day-nav__next">
+          <div class="day-nav__label">Next →</div>
+          <div class="day-nav__title" id="next-day-title"></div>
+        </a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a href="index.html">← Back to curriculum</a>
+    </div>
+  </footer>
+
+  <script src="data/days-1-9.js"></script>
+  <script src="data/days-10-17.js"></script>
+  <script src="data/days-18-25.js"></script>
+  <script src="data/index.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    renderDayPage();
+  </script>
+</body>
+</html>

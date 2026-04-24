@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASP.NET Core — 25-Day Study Guide</title>
+  <meta name="description" content="A 25-day deep-dive into ASP.NET Core Web API with four progressive modes: beginner, mid-level, advanced, and enterprise." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="index.html" class="brand">
+        <span class="brand__mark">.NET</span>
+        <span>25-Day Study Guide</span>
+      </a>
+      <span class="nav-meta">Intune-Team Prep · v1.0</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero__eyebrow">⟐ 25 days · 4 difficulty modes · ~100 challenges</div>
+        <h1 class="hero__title">Master ASP.NET Core <em>from the pipeline up.</em></h1>
+        <p class="hero__lede">
+          A structured 25-day curriculum that walks you from <code>Program.cs</code> through enterprise patterns — repository, proxy, decorator, message bus, background services — the way Microsoft's Intune Compliance team actually writes code. Each day ships with four progressively harder modes, flashcards, and coding challenges with togglable solutions.
+        </p>
+        <div class="hero__stats">
+          <div class="stat">
+            <span class="stat__num">25</span>
+            <span class="stat__label">Topics / Days</span>
+          </div>
+          <div class="stat">
+            <span class="stat__num">4</span>
+            <span class="stat__label">Modes per day</span>
+          </div>
+          <div class="stat">
+            <span class="stat__num">~450</span>
+            <span class="stat__label">Flashcards</span>
+          </div>
+          <div class="stat">
+            <span class="stat__num">~100</span>
+            <span class="stat__label">Coding challenges</span>
+          </div>
+          <div class="stat">
+            <span class="stat__num" id="progress-count">0/25</span>
+            <span class="stat__label">Completed</span>
+          </div>
+        </div>
+        <div class="progress-bar" style="max-width: 300px; margin-top: var(--s-5);">
+          <div class="progress-bar__fill" id="progress-fill"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section__header">
+          <div>
+            <span class="section__kicker">§01 · Curriculum</span>
+            <h2 style="margin-top: 8px;">The 25 essentials</h2>
+          </div>
+          <button id="reset-progress" class="btn-reveal" style="border-color: var(--border); color: var(--text-mute);">Reset progress</button>
+        </div>
+        <div class="day-grid" id="day-grid"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container-narrow">
+        <div class="section__header">
+          <span class="section__kicker">§02 · How to use this guide</span>
+        </div>
+        <div style="display: grid; gap: var(--s-5); grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+          <div>
+            <h4 style="color: var(--mode-beginner); margin-bottom: var(--s-2);">① Beginner</h4>
+            <p>Start here if the topic is new. Core concept, one code example, basic flashcards, one warm-up challenge.</p>
+          </div>
+          <div>
+            <h4 style="color: var(--mode-mid); margin-bottom: var(--s-2);">② Mid-level</h4>
+            <p>Realistic patterns, 2 code examples, deeper flashcards, a challenge that ties concepts together.</p>
+          </div>
+          <div>
+            <h4 style="color: var(--mode-advanced); margin-bottom: var(--s-2);">③ Advanced</h4>
+            <p>Tradeoffs, performance, edge cases, async complexity. The stuff staff engineers ask about.</p>
+          </div>
+          <div>
+            <h4 style="color: var(--mode-enterprise); margin-bottom: var(--s-2);">④ Enterprise</h4>
+            <p>Microsoft-scale patterns — compliance pipelines, proxies, message bus, distributed caching, observability. Like Intune.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      Built for Diego — prepping for Microsoft Intune Compliance · Fraunces / Inter Tight / JetBrains Mono
+    </div>
+  </footer>
+
+  <script src="data/days-1-9.js"></script>
+  <script src="data/days-10-17.js"></script>
+  <script src="data/days-18-25.js"></script>
+  <script src="data/index.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Render the day grid
+    const grid = document.getElementById('day-grid');
+    const progressCount = document.getElementById('progress-count');
+    const progressFill = document.getElementById('progress-fill');
+    const completed = JSON.parse(localStorage.getItem('completedDays') || '[]');
+
+    ALL_DAYS.forEach(day => {
+      const isDone = completed.includes(day.id);
+      const card = document.createElement('a');
+      card.href = `day.html?day=${day.id}`;
+      card.className = 'day-card' + (isDone ? ' completed' : '');
+      card.innerHTML = `
+        <div class="day-card__checkmark"></div>
+        <div class="day-card__number">Day ${String(day.day).padStart(2, '0')}</div>
+        <div class="day-card__title">${day.title}</div>
+        <p class="day-card__subtitle">${day.subtitle}</p>
+      `;
+      grid.appendChild(card);
+    });
+
+    // Update progress
+    function updateProgress() {
+      const done = JSON.parse(localStorage.getItem('completedDays') || '[]');
+      progressCount.textContent = `${done.length}/25`;
+      progressFill.style.width = `${(done.length / 25) * 100}%`;
+    }
+    updateProgress();
+
+    document.getElementById('reset-progress').addEventListener('click', () => {
+      if (confirm('Reset all day completion progress?')) {
+        localStorage.removeItem('completedDays');
+        location.reload();
+      }
+    });
+  </script>
+</body>
+</html>
